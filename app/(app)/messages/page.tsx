@@ -7,7 +7,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { Card } from '@/components/ui/card';
 import { Avatar } from '@/components/ui/avatar';
-import { MessageSquareHeart, ShieldCheck, Lock } from 'lucide-react';
+import { MessageSquareHeart, Lock } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function MessagesInboxPage() {

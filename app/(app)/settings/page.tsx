@@ -7,7 +7,7 @@ import { MobileNav } from '@/components/layout/MobileNav';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
-import { Settings, ShieldCheck, Lock, Trash2, Bell, Eye, Cat as CatIcon } from 'lucide-react';
+import { Settings, ShieldCheck, Lock, Trash2, Eye, Cat as CatIcon } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function SettingsPage() {

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Compass, Home, MessageSquareHeart, Bell, Settings, Cat as CatIcon, PlusCircle, ShieldCheck, LogOut, Menu, X } from 'lucide-react';
+import { Compass, Home, MessageSquareHeart, Bell, Settings, Cat as CatIcon, PlusCircle, LogOut, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
 import { Cat } from '@/types';

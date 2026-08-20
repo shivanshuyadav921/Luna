@@ -8,7 +8,7 @@ import { PostCard } from '@/components/feed/PostCard';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Avatar } from '@/components/ui/avatar';
-import { PlusCircle, Sparkles, Flame, Cat as CatIcon, Compass } from 'lucide-react';
+import { PlusCircle, Sparkles, Flame, Compass } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function HomePage() {

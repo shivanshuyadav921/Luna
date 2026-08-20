@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
 export default function ErrorPage({
-  error: _error,
   reset,
 }: {
   error: Error & { digest?: string };

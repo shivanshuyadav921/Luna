@@ -6,8 +6,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { PostCard } from '@/components/feed/PostCard';
 import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Compass, Flame, Shuffle, Globe, Sparkles, Star } from 'lucide-react';
+import { Compass, Flame, Shuffle, Sparkles, Star } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function DiscoverPage({

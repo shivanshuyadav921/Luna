@@ -68,12 +68,12 @@ export default function OnboardingPage() {
             .getPublicUrl(uploadData.path);
           avatarUrl = publicUrlData.publicUrl;
         }
-      } catch (err) {
+      } catch {
         setError('Avatar upload failed unexpectedly. Please try again.');
         setLoading(false);
         return;
       }
-    }
+
 
     const formData = new FormData(e.currentTarget);
     if (avatarUrl) {

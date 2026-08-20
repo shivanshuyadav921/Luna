@@ -93,7 +93,7 @@ export default function CreatePostPage() {
             .getPublicUrl(uploadData.path);
           imageUrl = publicUrlData.publicUrl;
         }
-      } catch (err) {
+      } catch {
         setError('Image upload failed unexpectedly. Please check your connection and try again.');
         setLoading(false);
         return;
