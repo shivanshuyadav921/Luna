@@ -29,7 +29,7 @@ export function Avatar({ src, alt, size = 'md', className, fallbackEmoji = '🐱
       )}
     >
       {src ? (
-        // eslint-disable-next-next/no-img-element
+        // eslint-disable-next-line @next/next/no-img-element
         <img src={src} alt={alt} className="w-full h-full object-cover" />
       ) : (
         <span role="img" aria-label={alt}>

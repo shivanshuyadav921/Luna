@@ -73,7 +73,7 @@ export default function OnboardingPage() {
         setLoading(false);
         return;
       }
-
+    }
 
     const formData = new FormData(e.currentTarget);
     if (avatarUrl) {

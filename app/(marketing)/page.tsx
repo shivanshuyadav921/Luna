@@ -118,7 +118,7 @@ export default async function LandingPage() {
 
               {/* Photo */}
               <div className="relative aspect-4/3 w-full bg-neutral-100 dark:bg-neutral-800 overflow-hidden">
-                {/* eslint-disable-next-next/no-img-element */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=800"
                   alt="Luna photo"

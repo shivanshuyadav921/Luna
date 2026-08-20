@@ -85,7 +85,7 @@ export function PostCard({ post, activeCat, onConnectSuccess }: PostCardProps) {
 
       {/* Post Photo */}
       <div className="relative aspect-4/3 sm:aspect-16/10 w-full bg-neutral-100 dark:bg-neutral-800 overflow-hidden">
-        {/* eslint-disable-next-next/no-img-element */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={post.image_url}
           alt={post.caption || 'Cat photo'}

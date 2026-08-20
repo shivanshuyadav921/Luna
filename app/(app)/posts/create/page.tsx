@@ -167,7 +167,7 @@ export default function CreatePostPage() {
                 <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">Cat Photo *</label>
                 <div className="relative aspect-16/10 w-full rounded-2xl border-2 border-dashed border-amber-300 dark:border-neutral-700 bg-amber-50/50 dark:bg-neutral-900 flex flex-col items-center justify-center overflow-hidden hover:border-orange-400 transition-colors">
                   {imagePreview ? (
-                    // eslint-disable-next-next/no-img-element
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
                   ) : (
                     <div className="text-center p-6 space-y-2">

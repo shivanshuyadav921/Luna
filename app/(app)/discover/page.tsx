@@ -87,7 +87,7 @@ export default async function DiscoverPage({
             </div>
 
             <div className="mt-4 flex flex-col sm:flex-row gap-4 items-center">
-              {/* eslint-disable-next-next/no-img-element */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={featuredPost.image_url}
                 alt={featuredPost.cat.name}

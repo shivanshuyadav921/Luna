@@ -51,7 +51,7 @@ export default async function ConnectionsPage() {
             <span>Anonymous Connections</span>
           </div>
           <h1 className="text-3xl font-black text-neutral-900 dark:text-neutral-100">
-            Cat Friends &amp; Requests
+            Cat Friends & Requests
           </h1>
           <p className="text-xs text-neutral-500">
             Connect anonymously through your cats. Accept requests to start private cat-to-cat messaging.
