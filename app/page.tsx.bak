@@ -1,0 +1,4 @@
+// Root / route — delegate to the marketing landing page
+// The (marketing) group page.tsx is the real landing page; this file ensures
+// the root route resolves correctly without the (marketing) layout group prefix conflict.
+export { default } from '@/app/(marketing)/page';
