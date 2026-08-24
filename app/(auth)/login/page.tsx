@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { signInAction, signInWithGoogleAction } from '@/actions/auth';
@@ -43,13 +43,8 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  // Show any error passed back from the OAuth callback (e.g. user denied consent)
-  useEffect(() => {
-    const callbackError = searchParams.get('error');
-    if (callbackError) {
-      setError(decodeURIComponent(callbackError));
-    }
-  }, [searchParams]);
+  const callbackError = searchParams.get('error');
+  const displayError = error || (callbackError ? decodeURIComponent(callbackError) : null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -83,9 +78,9 @@ function LoginForm() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {error && (
+          {displayError && (
             <div className="p-3 text-xs rounded-xl bg-red-100 dark:bg-red-950/80 text-red-700 dark:text-red-300 font-medium">
-              {error}
+              {displayError}
             </div>
           )}
 
