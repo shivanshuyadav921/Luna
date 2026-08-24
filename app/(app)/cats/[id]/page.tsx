@@ -10,6 +10,8 @@ import { Card } from '@/components/ui/card';
 import { PostCard } from '@/components/feed/PostCard';
 import { Flame, ShieldCheck, Cat as CatIcon } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function CatProfilePage({
   params,
 }: {

@@ -11,6 +11,8 @@ import { Avatar } from '@/components/ui/avatar';
 import { PlusCircle, Sparkles, Flame, Compass } from 'lucide-react';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

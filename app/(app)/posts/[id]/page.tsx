@@ -9,6 +9,8 @@ import { PostCard } from '@/components/feed/PostCard';
 import { CommentSection } from '@/components/feed/CommentSection';
 import { Card } from '@/components/ui/card';
 
+export const dynamic = 'force-dynamic';
+
 export default async function PostDetailPage({
   params,
 }: {

@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { ShieldCheck, Heart, MessageSquare, Lock, Sparkles, ArrowRight, EyeOff, UserCheck, Flame } from 'lucide-react';
 import { Footer } from '@/components/layout/Footer';
 
+export const dynamic = 'force-dynamic';
+
 export default async function LandingPage() {
   // Redirect already-authenticated users straight to their feed
   const supabase = await createClient();

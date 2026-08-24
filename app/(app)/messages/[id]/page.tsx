@@ -8,6 +8,8 @@ import { Navbar } from '@/components/layout/Navbar';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { ChatWindow } from '@/components/messaging/ChatWindow';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ConversationRoomPage({
   params,
 }: {

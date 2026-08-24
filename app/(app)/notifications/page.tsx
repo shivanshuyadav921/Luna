@@ -1,10 +1,13 @@
 import React from 'react';
+import { Notification } from '@/types';
 import { createClient } from '@/lib/supabase/server';
 import { getUserCats } from '@/actions/cats';
 import { Navbar } from '@/components/layout/Navbar';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { Card } from '@/components/ui/card';
 import { Bell, Heart, MessageSquare, UserCheck, HeartHandshake } from 'lucide-react';
+
+export const dynamic = 'force-dynamic';
 
 export default async function NotificationsPage() {
   const supabase = await createClient();
@@ -13,13 +16,17 @@ export default async function NotificationsPage() {
   const cats = await getUserCats();
   const activeCat = cats[0] || null;
 
-  // Fetch user notifications
-  const { data: notifications } = await supabase
-    .from('notifications')
-    .select(`*, actor_cat:cats(*)`)
-    .eq('user_id', user!.id)
-    .order('created_at', { ascending: false })
-    .limit(20);
+  // Fetch user notifications safely
+  let notifications: Notification[] = [];
+  if (user) {
+    const { data } = await supabase
+      .from('notifications')
+      .select(`*, actor_cat:cats(*)`)
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(20);
+    notifications = (data || []) as Notification[];
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-amber-50/40 dark:bg-neutral-950 pb-20">

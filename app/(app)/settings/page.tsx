@@ -10,6 +10,13 @@ import { Avatar } from '@/components/ui/avatar';
 import { Settings, ShieldCheck, Lock, Trash2, Eye, Cat as CatIcon } from 'lucide-react';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
+async function handleDeleteAccount() {
+  'use server';
+  await deleteAccountAction();
+}
+
 export default async function SettingsPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -71,7 +78,7 @@ export default async function SettingsPage() {
             <span>Privacy Architecture</span>
           </h2>
           <div className="space-y-2 text-xs text-neutral-600 dark:text-neutral-400">
-            <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 flex items-center gap-2">
+            <div className="p-3 rounded-xl bg-emerald-50 dark:emerald-950/40 border border-emerald-200 dark:border-emerald-900 flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-600 flex-shrink-0" />
               <span>Human Email & ID strictly protected behind PostgreSQL Row Level Security.</span>
             </div>
@@ -94,10 +101,7 @@ export default async function SettingsPage() {
             </p>
           </div>
 
-          <form action={async () => {
-            'use server';
-            await deleteAccountAction();
-          }}>
+          <form action={handleDeleteAccount}>
             <Button type="submit" variant="destructive" size="sm" className="rounded-2xl font-bold">
               Permanently Delete My Account
             </Button>

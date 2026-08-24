@@ -11,6 +11,24 @@ import { Button } from '@/components/ui/button';
 import { Cat as CatIcon, Check, X, MessageSquareHeart, HeartHandshake } from 'lucide-react';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
+async function handleAcceptRequest(formData: FormData) {
+  'use server';
+  const id = formData.get('requestId') as string;
+  if (id) {
+    await acceptConnectionRequestAction(id);
+  }
+}
+
+async function handleDeclineRequest(formData: FormData) {
+  'use server';
+  const id = formData.get('requestId') as string;
+  if (id) {
+    await declineConnectionRequestAction(id);
+  }
+}
+
 export default async function ConnectionsPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -87,19 +105,15 @@ export default async function ConnectionsPage() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <form action={async () => {
-                        'use server';
-                        await acceptConnectionRequestAction(req.id);
-                      }}>
+                      <form action={handleAcceptRequest}>
+                        <input type="hidden" name="requestId" value={req.id} />
                         <Button size="sm" type="submit" className="rounded-full bg-emerald-500 hover:bg-emerald-600 p-2">
                           <Check className="w-4 h-4 text-white" />
                         </Button>
                       </form>
 
-                      <form action={async () => {
-                        'use server';
-                        await declineConnectionRequestAction(req.id);
-                      }}>
+                      <form action={handleDeclineRequest}>
+                        <input type="hidden" name="requestId" value={req.id} />
                         <Button size="sm" type="submit" variant="outline" className="rounded-full p-2">
                           <X className="w-4 h-4 text-neutral-500" />
                         </Button>
