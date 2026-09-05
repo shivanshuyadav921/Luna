@@ -45,7 +45,7 @@ cp .env.example .env.local
 Fill in your Supabase project credentials:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_VkeagIRbALox83X7oPUUQg_QDaDXc5M
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
 

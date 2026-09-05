@@ -15,8 +15,8 @@ function getCallbackUrl(): string {
     (process.env.VERCEL_PROJECT_PRODUCTION_URL
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
       : process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : undefined);
+        ? `https://${process.env.VERCEL_URL}`
+        : undefined);
 
   if (siteUrl) {
     // Trim trailing slash to avoid double slashes
