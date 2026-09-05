@@ -142,7 +142,11 @@ export async function signInAction(formData: FormData) {
     }
   }
 
-  redirect('/home');
+  const rawNext = formData.get('next') as string | null;
+  const safeNext =
+    rawNext && rawNext.startsWith('/') && !rawNext.startsWith('//') ? rawNext : '/home';
+
+  redirect(safeNext);
 }
 
 export async function signInWithGoogleAction() {

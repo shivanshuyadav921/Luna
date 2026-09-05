@@ -90,8 +90,8 @@ export async function GET(request: Request) {
   const hasCompletedOnboarding = cats && cats.length > 0;
 
   if (hasCompletedOnboarding) {
-    // Returning user — honor next param if safe
-    const safeNext = next.startsWith('/') ? next : '/home';
+    // Returning user — honor next param if safe (disallow protocol-relative //)
+    const safeNext = next.startsWith('/') && !next.startsWith('//') ? next : '/home';
     return NextResponse.redirect(new URL(safeNext, redirectBase));
   }
 

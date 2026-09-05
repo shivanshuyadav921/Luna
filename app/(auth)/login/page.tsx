@@ -69,7 +69,12 @@ function LoginForm() {
       // Use client-side OAuth so the PKCE code verifier is stored directly in browser cookies,
       // and redirect target accurately matches current host (localhost or production Vercel)
       const supabase = createClient();
-      const redirectUrl = `${window.location.origin}/callback`;
+      const nextParam = searchParams.get('next');
+      const safeNextParam =
+        nextParam && nextParam.startsWith('/') && !nextParam.startsWith('//') ? nextParam : null;
+      const redirectUrl = safeNextParam
+        ? `${window.location.origin}/callback?next=${encodeURIComponent(safeNextParam)}`
+        : `${window.location.origin}/callback`;
 
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -131,6 +136,7 @@ function LoginForm() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            <input type="hidden" name="next" value={searchParams.get('next') || ''} />
             <div className="space-y-1">
               <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">Email Address</label>
               <div className="relative">

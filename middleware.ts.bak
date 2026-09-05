@@ -1,4 +1,0 @@
-// This file intentionally empty.
-// Middleware has been migrated to proxy.ts per Next.js 16 conventions.
-// See: https://nextjs.org/docs/messages/middleware-to-proxy
-export {};
