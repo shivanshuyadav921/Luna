@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { createClientSafe } from '@/lib/supabase/server';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Avatar } from '@/components/ui/avatar';
@@ -12,10 +12,14 @@ import { Footer } from '@/components/layout/Footer';
 export const dynamic = 'force-dynamic';
 
 export default async function LandingPage() {
-  // Redirect already-authenticated users straight to their feed
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (user) redirect('/home');
+  // Redirect already-authenticated users straight to their feed.
+  // createClientSafe() returns null if env vars are missing (e.g., fresh Vercel deploy
+  // before env vars are configured) — in that case we just show the marketing page.
+  const supabase = await createClientSafe();
+  if (supabase) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) redirect('/home');
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-amber-50/60 via-amber-100/20 to-orange-50/30 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950 text-neutral-900 dark:text-neutral-100">
