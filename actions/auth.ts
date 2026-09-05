@@ -27,6 +27,13 @@ function getCallbackUrl(): string {
 }
 
 export async function signUpAction(formData: FormData) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return {
+      error:
+        'Supabase configuration missing: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are required. Please add them in Vercel Dashboard → Project Settings → Environment Variables.',
+    };
+  }
+
   const email = ((formData.get('email') as string) || '').trim().toLowerCase();
   const password = (formData.get('password') as string) || '';
   const confirmPassword = formData.get('confirmPassword') as string | null;
@@ -64,6 +71,17 @@ export async function signUpAction(formData: FormData) {
 
   // If email confirmation is disabled in Supabase, an active session is returned immediately
   if (data.session) {
+    if (data.user) {
+      const { data: cats } = await supabase
+        .from('cats')
+        .select('id')
+        .eq('owner_id', data.user.id)
+        .limit(1);
+
+      if (cats && cats.length > 0) {
+        redirect('/home');
+      }
+    }
     redirect('/onboarding');
   }
 
@@ -73,6 +91,13 @@ export async function signUpAction(formData: FormData) {
 }
 
 export async function signInAction(formData: FormData) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return {
+      error:
+        'Supabase configuration missing: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are required. Please add them in Vercel Dashboard → Project Settings → Environment Variables.',
+    };
+  }
+
   const email = ((formData.get('email') as string) || '').trim().toLowerCase();
   const password = (formData.get('password') as string) || '';
 
@@ -121,6 +146,13 @@ export async function signInAction(formData: FormData) {
 }
 
 export async function signInWithGoogleAction() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return {
+      error:
+        'Supabase configuration missing: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are required. Please add them in Vercel Dashboard → Project Settings → Environment Variables.',
+    };
+  }
+
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signInWithOAuth({
