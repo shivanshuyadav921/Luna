@@ -15,10 +15,18 @@ export default async function LandingPage() {
   // Redirect already-authenticated users straight to their feed.
   // createClientSafe() returns null if env vars are missing (e.g., fresh Vercel deploy
   // before env vars are configured) — in that case we just show the marketing page.
-  const supabase = await createClientSafe();
-  if (supabase) {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) redirect('/home');
+  try {
+    const supabase = await createClientSafe();
+    if (supabase) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) redirect('/home');
+    }
+  } catch (error: any) {
+    // Next.js redirect() throws an error with digest NEXT_REDIRECT — must rethrow it
+    if (error?.digest?.includes('NEXT_REDIRECT') || error?.message === 'NEXT_REDIRECT') {
+      throw error;
+    }
+    console.warn('[Luna] Session check on landing page skipped:', error?.message || error);
   }
 
   return (

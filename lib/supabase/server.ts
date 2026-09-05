@@ -64,5 +64,10 @@ export async function createClientSafe() {
     return null;
   }
 
-  return createClient();
+  try {
+    return await createClient();
+  } catch (error) {
+    console.error('[Luna] Failed to create safe Supabase client:', error);
+    return null;
+  }
 }

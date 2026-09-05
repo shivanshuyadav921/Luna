@@ -10,7 +10,7 @@ const PROTECTED_PATHS = [
   '/notifications',
   '/settings',
   '/cats',
-  '/posts/create',
+  '/posts',
   '/onboarding',
 ];
 

@@ -6,11 +6,18 @@ import { redirect } from 'next/navigation';
 
 /**
  * Returns the absolute callback URL for the current environment.
- * Uses NEXT_PUBLIC_SITE_URL in production (Vercel) and falls back
- * to localhost for local development.
+ * Uses NEXT_PUBLIC_SITE_URL or Vercel system domain in production,
+ * and falls back to localhost for local development.
  */
 function getCallbackUrl(): string {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : undefined);
+
   if (siteUrl) {
     // Trim trailing slash to avoid double slashes
     return `${siteUrl.replace(/\/$/, '')}/callback`;
