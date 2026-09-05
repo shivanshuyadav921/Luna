@@ -27,8 +27,13 @@ function getCallbackUrl(): string {
 }
 
 export async function signUpAction(formData: FormData) {
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
+  const email = ((formData.get('email') as string) || '').trim().toLowerCase();
+  const password = (formData.get('password') as string) || '';
+  const confirmPassword = formData.get('confirmPassword') as string | null;
+
+  if (confirmPassword !== null && confirmPassword !== undefined && confirmPassword !== password) {
+    return { error: 'Passwords do not match.' };
+  }
 
   const parseResult = authSchema.safeParse({ email, password });
   if (!parseResult.success) {
@@ -49,30 +54,67 @@ export async function signUpAction(formData: FormData) {
     return { error: error.message };
   }
 
+  // Supabase returns an empty identities array when email enumeration prevention is ON
+  // and an account with this email already exists (e.g., via password or Google OAuth).
+  if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+    return {
+      error: 'An account with this email already exists. Please sign in with your password or continue with Google.',
+    };
+  }
+
+  // If email confirmation is disabled in Supabase, an active session is returned immediately
   if (data.session) {
     redirect('/onboarding');
   }
 
-  return { success: 'Check your email for a confirmation link, then sign in.' };
+  return {
+    success: 'Account created! Please check your email for a confirmation link to activate your account.',
+  };
 }
 
 export async function signInAction(formData: FormData) {
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
+  const email = ((formData.get('email') as string) || '').trim().toLowerCase();
+  const password = (formData.get('password') as string) || '';
 
   const parseResult = authSchema.safeParse({ email, password });
   if (!parseResult.success) {
-    return { error: parseResult.error.issues[0].message }; 
+    return { error: parseResult.error.issues[0].message };
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (error) {
+    if (error.message.includes('Invalid login credentials')) {
+      return {
+        error:
+          'Invalid email or password. If you originally signed up with Google, please click "Continue with Google".',
+      };
+    }
+    if (error.message.includes('Email not confirmed')) {
+      return {
+        error:
+          'Your email has not been confirmed yet. Please check your inbox for the confirmation link.',
+      };
+    }
     return { error: error.message };
+  }
+
+  // Check whether this user has already created a cat profile.
+  // If not, guide them straight to onboarding.
+  if (data?.user) {
+    const { data: cats } = await supabase
+      .from('cats')
+      .select('id')
+      .eq('owner_id', data.user.id)
+      .limit(1);
+
+    if (!cats || cats.length === 0) {
+      redirect('/onboarding');
+    }
   }
 
   redirect('/home');
@@ -88,7 +130,6 @@ export async function signInWithGoogleAction() {
       // Supabase will redirect here after Google authenticates the user.
       redirectTo: getCallbackUrl(),
       queryParams: {
-        // Prompt the Google account picker every time for a better UX
         access_type: 'offline',
         prompt: 'consent',
       },
@@ -100,7 +141,7 @@ export async function signInWithGoogleAction() {
     return { error: error.message };
   }
 
-  if (data.url) {
+  if (data?.url) {
     redirect(data.url);
   }
 

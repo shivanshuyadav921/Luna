@@ -7,6 +7,7 @@ import { Compass, Home, MessageSquareHeart, Bell, Settings, Cat as CatIcon, Plus
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
 import { Cat } from '@/types';
+import { signOutAction } from '@/actions/auth';
 
 interface NavbarProps {
   user?: { id: string; email?: string } | null;
@@ -19,6 +20,14 @@ interface NavbarProps {
 export function Navbar({ user, cats = [], selectedCatId, onSelectCat, onSignOut }: NavbarProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  async function handleSignOut() {
+    if (onSignOut) {
+      onSignOut();
+      return;
+    }
+    await signOutAction();
+  }
 
   const selectedCat = cats.find((c) => c.id === selectedCatId) || cats[0];
 
@@ -131,15 +140,13 @@ export function Navbar({ user, cats = [], selectedCatId, onSelectCat, onSignOut 
               <Link href="/settings" className="p-2 text-neutral-600 dark:text-neutral-400 hover:text-orange-500 rounded-full hover:bg-amber-100/50 dark:hover:bg-neutral-800">
                 <Settings className="w-5 h-5" />
               </Link>
-              {onSignOut && (
-                <button
-                  onClick={onSignOut}
-                  title="Sign Out"
-                  className="p-2 text-neutral-500 hover:text-red-500 rounded-full hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
-                >
-                  <LogOut className="w-5 h-5" />
-                </button>
-              )}
+              <button
+                onClick={handleSignOut}
+                title="Sign Out"
+                className="p-2 text-neutral-500 hover:text-red-500 rounded-full hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
             </>
           ) : (
             <div className="flex items-center gap-2">
@@ -185,17 +192,27 @@ export function Navbar({ user, cats = [], selectedCatId, onSelectCat, onSignOut 
               </Link>
             );
           })}
-          <div className="pt-2 border-t border-amber-200 dark:border-neutral-800 flex items-center justify-between">
+          <div className="pt-2 border-t border-amber-200 dark:border-neutral-800 space-y-2">
             <Link
               href="/posts/create"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full"
+              className="w-full block"
             >
               <Button className="w-full py-3 rounded-2xl font-bold gap-2">
                 <PlusCircle className="w-5 h-5" />
                 <span>Post Daily Cat Photo</span>
               </Button>
             </Link>
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                handleSignOut();
+              }}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Sign Out</span>
+            </button>
           </div>
         </div>
       )}

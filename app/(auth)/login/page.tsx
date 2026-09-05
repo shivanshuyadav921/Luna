@@ -4,6 +4,7 @@ import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { signInAction, signInWithGoogleAction } from '@/actions/auth';
+import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -63,12 +64,38 @@ function LoginForm() {
   async function handleGoogleSignIn() {
     setError(null);
     setGoogleLoading(true);
-    const res = await signInWithGoogleAction();
-    if (res?.error) {
-      setError(res.error);
+
+    try {
+      // Use client-side OAuth so the PKCE code verifier is stored directly in browser cookies,
+      // and redirect target accurately matches current host (localhost or production Vercel)
+      const supabase = createClient();
+      const redirectUrl = `${window.location.origin}/callback`;
+
+      const { error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (oauthError) {
+        // Fallback to server action if client call encountered an issue
+        console.warn('[Luna] Client OAuth failed, falling back to server action:', oauthError.message);
+        const res = await signInWithGoogleAction();
+        if (res?.error) {
+          setError(res.error);
+          setGoogleLoading(false);
+        }
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to start Google sign-in';
+      setError(msg);
       setGoogleLoading(false);
     }
-    // On success, signInWithGoogleAction redirects — no need to reset loading
   }
 
   return (

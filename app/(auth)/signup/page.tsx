@@ -4,6 +4,7 @@ import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { signUpAction, signInWithGoogleAction } from '@/actions/auth';
+import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -54,6 +55,15 @@ function SignupForm() {
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
+    const password = formData.get('password') as string;
+    const confirmPassword = formData.get('confirmPassword') as string;
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.');
+      setLoading(false);
+      return;
+    }
+
     const res = await signUpAction(formData);
 
     if (res?.error) {
@@ -67,12 +77,35 @@ function SignupForm() {
   async function handleGoogleSignIn() {
     setError(null);
     setGoogleLoading(true);
-    const res = await signInWithGoogleAction();
-    if (res?.error) {
-      setError(res.error);
+
+    try {
+      const supabase = createClient();
+      const redirectUrl = `${window.location.origin}/callback`;
+
+      const { error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (oauthError) {
+        console.warn('[Luna] Client OAuth failed, falling back to server action:', oauthError.message);
+        const res = await signInWithGoogleAction();
+        if (res?.error) {
+          setError(res.error);
+          setGoogleLoading(false);
+        }
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to start Google sign-in';
+      setError(msg);
       setGoogleLoading(false);
     }
-    // On success, the server action redirects — no need to reset loading
   }
 
   return (
@@ -135,8 +168,24 @@ function SignupForm() {
                 <Input
                   name="password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="At least 6 characters"
                   required
+                  minLength={6}
+                  className="pl-9"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">Confirm Password</label>
+              <div className="relative">
+                <Lock className="w-4 h-4 absolute left-3 top-3 text-neutral-400" />
+                <Input
+                  name="confirmPassword"
+                  type="password"
+                  placeholder="Confirm your password"
+                  required
+                  minLength={6}
                   className="pl-9"
                 />
               </div>
